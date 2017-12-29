@@ -3485,6 +3485,12 @@ final class Parser(AST) : Lexer
                 auto tempinst = new AST.TemplateInstance(loc, id, parseTemplateArguments());
                 t = parseBasicTypeStartingAt(new AST.TypeInstance(loc, tempinst), dontLookDotIdents);
             }
+            else if (token.value == TOKlparen)
+            {
+                error("expected type but %s was used as a function", id.toChars());
+                t = AST.Type.terror;
+                break;
+            }
             else
             {
                 t = parseBasicTypeStartingAt(new AST.TypeIdentifier(loc, id), dontLookDotIdents);
