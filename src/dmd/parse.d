@@ -3485,12 +3485,6 @@ final class Parser(AST) : Lexer
                 auto tempinst = new AST.TemplateInstance(loc, id, parseTemplateArguments());
                 t = parseBasicTypeStartingAt(new AST.TypeInstance(loc, tempinst), dontLookDotIdents);
             }
-            else if (token.value == TOKlparen)
-            {
-                error("expected type but %s was used as a function", id.toChars());
-                t = AST.Type.terror;
-                break;
-            }
             else
             {
                 t = parseBasicTypeStartingAt(new AST.TypeIdentifier(loc, id), dontLookDotIdents);
@@ -4334,6 +4328,13 @@ final class Parser(AST) : Lexer
         {
             ts = parseBasicType();
             ts = parseBasicType2(ts);
+        }
+
+        if (token.value == TOKlparen)
+        {
+            error(loc, "expected type but %s was used as a function", tk.toChars());
+            ts = AST.Type.terror;
+            nextToken();
         }
 
     L2:
