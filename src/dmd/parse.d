@@ -4328,14 +4328,14 @@ final class Parser(AST) : Lexer
         {
             ts = parseBasicType();
             ts = parseBasicType2(ts);
+            if (token.value == TOKlparen)
+            {
+                error(loc, "expected type but %s was used as a function", token.toChars());
+                ts = AST.Type.terror;
+                nextToken();
+            }
         }
 
-        if (token.value == TOKlparen)
-        {
-            error(loc, "expected type but %s was used as a function", tk.toChars());
-            ts = AST.Type.terror;
-            nextToken();
-        }
 
     L2:
         tfirst = null;
