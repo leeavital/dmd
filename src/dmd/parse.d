@@ -4330,9 +4330,8 @@ final class Parser(AST) : Lexer
             ts = parseBasicType2(ts);
             if (token.value == TOKlparen)
             {
-                error(loc, "expected type but %s was used as a function", token.toChars());
-                ts = AST.Type.terror;
-                nextToken();
+                error(loc, "expected a declaration, but %s was called as a function", ts.toChars());
+                return new AST.Dsymbols();
             }
         }
 
