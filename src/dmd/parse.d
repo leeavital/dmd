@@ -391,7 +391,7 @@ final class Parser(AST) : Lexer
             }
         }
 
-        decldefs = parseDeclDefs(0, &lastDecl);
+        decldefs = parseDeclDefs(false, &lastDecl);
         if (token.value != TOKeof)
         {
             error(token.loc, "unrecognized declaration");
@@ -406,7 +406,7 @@ final class Parser(AST) : Lexer
         return new AST.Dsymbols();
     }
 
-    AST.Dsymbols* parseDeclDefs(int once, AST.Dsymbol* pLastDecl = null, PrefixAttributes!AST* pAttrs = null)
+    AST.Dsymbols* parseDeclDefs(bool once, AST.Dsymbol* pLastDecl = null, PrefixAttributes!AST* pAttrs = null)
     {
         AST.Dsymbol lastDecl = null; // used to link unittest to its previous declaration
         if (!pLastDecl)
@@ -1247,7 +1247,7 @@ final class Parser(AST) : Lexer
                 lookingForElse = Loc();
 
                 nextToken();
-                a = parseDeclDefs(0, pLastDecl);
+                a = parseDeclDefs(false, pLastDecl);
                 if (token.value != TOKrcurly)
                 {
                     /* { */
@@ -1260,11 +1260,11 @@ final class Parser(AST) : Lexer
             }
         case TOKcolon:
             nextToken();
-            a = parseDeclDefs(0, pLastDecl); // grab declarations up to closing curly bracket
+            a = parseDeclDefs(false, pLastDecl); // grab declarations up to closing curly bracket
             break;
 
         default:
-            a = parseDeclDefs(1, pLastDecl, pAttrs);
+            a = parseDeclDefs(true, pLastDecl, pAttrs);
             break;
         }
         return a;
@@ -3100,7 +3100,7 @@ final class Parser(AST) : Lexer
             const lookingForElseSave = lookingForElse;
             lookingForElse = Loc();
             nextToken();
-            members = parseDeclDefs(0);
+            members = parseDeclDefs(false);
             lookingForElse = lookingForElseSave;
             if (token.value != TOKrcurly)
             {
@@ -8537,7 +8537,7 @@ final class Parser(AST) : Lexer
             else
             {
                 nextToken();
-                members = parseDeclDefs(0);
+                members = parseDeclDefs(false);
                 if (token.value != TOKrcurly)
                     error("class member expected");
                 nextToken();
